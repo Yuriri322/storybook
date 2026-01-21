@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 import { Input } from '../../components/Input';
 
 const meta: Meta<typeof Input> = {
@@ -44,12 +45,22 @@ export const Password: Story = {
   },
 };
 
+// Interactive demo for password with value
+const PasswordWithValueDemo = () => {
+  const [value, setValue] = useState('mysecretpassword');
+  
+  return (
+    <Input
+      type="password"
+      label="Password"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+};
+
 export const PasswordWithValue: Story = {
-  args: {
-    type: 'password',
-    label: 'Password',
-    value: 'mysecretpassword',
-  },
+  render: () => <PasswordWithValueDemo />,
   name: 'Password (with value)',
 };
 
@@ -69,14 +80,24 @@ export const Email: Story = {
   },
 };
 
+// Interactive demo for clearable input
+const ClearableDemo = () => {
+  const [value, setValue] = useState('Some text to clear');
+  
+  return (
+    <Input
+      type="text"
+      placeholder="Type something..."
+      label="Clearable Input"
+      clearable
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+};
+
 export const Clearable: Story = {
-  args: {
-    type: 'text',
-    placeholder: 'Type something...',
-    label: 'Clearable Input',
-    clearable: true,
-    value: 'Some text to clear',
-  },
+  render: () => <ClearableDemo />,
 };
 
 export const ClearableEmpty: Story = {
@@ -89,14 +110,29 @@ export const ClearableEmpty: Story = {
   name: 'Clearable (empty)',
 };
 
+// Interactive demo for input with error validation
+const WithErrorDemo = () => {
+  const [value, setValue] = useState('invalid-email');
+  
+  // Simple email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isValid = emailRegex.test(value);
+  const errorMessage = value && !isValid ? 'Please enter a valid email address' : undefined;
+  
+  return (
+    <Input
+      type="email"
+      placeholder="Enter your email..."
+      label="Email"
+      error={errorMessage}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+};
+
 export const WithError: Story = {
-  args: {
-    type: 'email',
-    placeholder: 'Enter your email...',
-    label: 'Email',
-    error: 'Please enter a valid email address',
-    value: 'invalid-email',
-  },
+  render: () => <WithErrorDemo />,
 };
 
 export const Disabled: Story = {
@@ -108,13 +144,23 @@ export const Disabled: Story = {
   },
 };
 
+// Interactive demo for password with clearable
+const PasswordClearableDemo = () => {
+  const [value, setValue] = useState('mysecretpass');
+  
+  return (
+    <Input
+      type="password"
+      placeholder="Enter password..."
+      label="Password with Clear"
+      clearable
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+};
+
 export const PasswordClearable: Story = {
-  args: {
-    type: 'password',
-    placeholder: 'Enter password...',
-    label: 'Password with Clear',
-    clearable: true,
-    value: 'mysecretpass',
-  },
+  render: () => <PasswordClearableDemo />,
   name: 'Password + Clearable',
 };
