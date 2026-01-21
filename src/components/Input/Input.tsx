@@ -26,12 +26,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       onChange,
       className = '',
       disabled,
+      id,
       ...props
     },
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
     const [internalValue, setInternalValue] = useState('');
+
+    // Generate a unique ID
+    const generatedId = React.useId();
+    const inputId = id || generatedId;
 
     const currentValue = value !== undefined ? value : internalValue;
 
@@ -62,17 +67,24 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={`input-wrapper ${fullWidth ? 'input-wrapper--full-width' : ''}`}>
-        {label && <label className="input-label">{label}</label>}
+        {label && (
+          <label htmlFor={inputId} className="input-label">
+            {label}
+          </label>
+        )}
         <div
           className={`input-container ${error ? 'input-container--error' : ''} ${disabled ? 'input-container--disabled' : ''}`}
         >
           <input
             ref={ref}
+            id={inputId}
             type={inputType}
             value={currentValue}
             onChange={handleChange}
             disabled={disabled}
             className={`input-field ${className}`}
+            aria-invalid={error ? 'true' : 'false'}
+            aria-describedby={error ? `${inputId}-error` : undefined}
             {...props}
           />
           <div className="input-actions">
@@ -132,7 +144,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             )}
           </div>
         </div>
-        {error && <span className="input-error">{error}</span>}
+        {error && (
+          <span id={`${inputId}-error`} className="input-error">
+            {error}
+          </span>
+        )}
       </div>
     );
   }
